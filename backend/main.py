@@ -1,10 +1,13 @@
 import os
+import base64
 from dotenv import load_dotenv
 
 load_dotenv()
+
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
@@ -16,6 +19,8 @@ app = FastAPI(
     title="LangChain Server",
     version="1.0",
     description="A simple API server using LangChain's Runnable interfaces",
+    docs_url=None,
+    redoc_url=None
 )
 
 app.add_middleware(
@@ -25,6 +30,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def check_permission(method, api, auth):
+    scheme, data = (auth or ' ').split(' ', 1)
+    if scheme != 'Basic':
+        return False
+    username, password = base64.b64decode(data).decode().split(':', 1)
+    if username == os.getenv("GUEST_NAME") and password == os.getenv("GUEST_PASSWORD"):
+        return True
+
+
+@app.middleware("http")
+async def check_authentication(request: Request, call_next):
+    auth = request.headers.get('Authorization')
+    if not check_permission(request.method, request.url.path, auth):
+        return JSONResponse(None, 401, {"WWW-Authenticate": "Basic"})
+    return await call_next(request)
+
 
 # LangChain stuff
 
