@@ -1,0 +1,7 @@
+fastapi
+pydantic==1.10.13
+sse_starlette
+openai
+langchain
+langserve
+pinecone-client
