@@ -1,10 +1,6 @@
-build:
-	docker build -t assistant_back ./backend
+up:
+	docker-compose up -d --build
 
-run:
-	docker run --name assistant_back -p 8000:8000 -d assistant_back
+down:
+	docker-compose down
 
-stop:
-	docker stop assistant_back && docker rm assistant_back
-
-restart: stop build run

@@ -34,8 +34,8 @@ function App() {
 
       if (response.data && response.data.output) {
         // Transform each string in the array into an <li> element and join them
-        const listHtml = response.data.output.text;
-        appendToChatHistory('Assistant', {__html: listHtml});
+        const answer = response.data.output;
+        appendToChatHistory('Assistant', {__html: answer});
       }
     } catch (error) {
       console.error('Error sending request to the backend:', error);

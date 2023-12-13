@@ -44,4 +44,4 @@ class Input(BaseModel):
 @app.post("/invoke")
 def invoke(user_input: Input):
     results = docsearch.similarity_search(query=user_input.input, k=15)
-    return chain.run(input_documents=results, question=user_input.input)
+    return {"output": chain.run(input_documents=results, question=user_input.input)}

@@ -1,7 +1,7 @@
 fastapi
-pydantic==1.10.13
-sse_starlette
+uvicorn
 openai
 langchain
-langserve
+tiktoken
 pinecone-client
+python-dotenv
