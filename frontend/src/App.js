@@ -81,11 +81,18 @@ function App() {
     }
   };
 
-
   const clearHistory = () => {
     setChatHistory([]);
     localStorage.removeItem('chatHistory');
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) { // Check for 'Enter' key and not holding shift
+      event.preventDefault(); // Prevent default to avoid newline in textarea
+      handleSubmit(event); // Submit the form
+    }
+  };
+
 
   if (!isAuthenticated) {
     return (
@@ -177,6 +184,7 @@ function App() {
             style={{width: '80%', height: '40px', marginRight: '10px'}}
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
           ></textarea>
           <button type="submit" className="btn btn-primary">Submit</button>
         </form>
